@@ -12,15 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    logger.info('running chac worker...')
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    print('running chac worker...')
+    ser = serial.Serial(settings.SERIAL_PORT, settings.SERIAL_BAUDRATE)
     db = Database(settings.DATABASE_PATH)
     while True:
         data = ser.readline()
         if 'data:' in data:
-            humidity, temperature = data.replace('data:', '').split('#')
+            humidity, temperature = map(float, data.replace('data:', '').split('#'))
             db.update(humidity, temperature)
-            logger.info("update db: %s" % datetime.datetime.now())
+            print("[%s] update - %s °C - %s %%" % (datetime.datetime.now(), temperature, humidity))
 
 
 if __name__ == '__main__':
