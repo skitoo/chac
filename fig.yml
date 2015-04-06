@@ -1,0 +1,20 @@
+chac:
+    build: .
+    command: python chac/manage.py runserver 0.0.0.0:8000
+    volumes:
+        - .:/code
+    ports:
+        - "8000:8000"
+    links:
+        - db
+        - redis
+    environment:
+        CHAC_DB_NAME: postgres
+        CHAC_DB_USER: postgres
+        CHAC_DB_HOST: db
+
+db:
+    image: postgres
+
+redis:
+    image: redis
